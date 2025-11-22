@@ -19,11 +19,11 @@ Comparative study of deep learning architectures for Human Activity Recognition 
 ## Model Results Summary
 
 | Model | Architecture | Test Accuracy | F1-Score | Training Status |
-|-------|-------------|---------------|----------|-----------------|
+|-------|-------------|---------------|----------|-----------------||
 | **Model 1** | CNN-LSTM Baseline | **91.11%** | **0.9113** | ✅ **Completed** |
 | **Model 2** | CNN-LSTM-Attention | **90.94%** | **0.9104** | ✅ **Completed** |
 | **Model 4** | CNN-BiLSTM-Attention | **91.21%** | **0.9029** | ✅ **Completed** |
-| **Model 5** | CNN-Transformer | **61.55%** ⚠️ | **0.5789** | ✅ **Completed** |
+| **Model 5** | CNN-Transformer | **87.82%** | **0.8764** | ✅ **Completed** |
 
 **Note**: `bilstm-reference/` folder contains reference BiLSTM implementations used to build Model 4.
 
@@ -246,36 +246,34 @@ Output (6 classes)
 - Loss: NLLLoss (model outputs log_softmax)
 
 **Performance Metrics**:
-- **Test Accuracy**: 61.55% (best at epoch 40)
-- **F1-Score**: 0.5789 (macro average)
-- **Training Accuracy**: 64.53% (final)
+- **Test Accuracy**: 87.82% (best at epoch 30) ✅ **FIXED!**
+- **F1-Score**: 0.8764 (macro average)
+- **Training Accuracy**: 94.19% (peak)
 
 **Per-Class Performance**:
 | Activity | Precision | Recall | F1-Score | Support |
 |----------|-----------|--------|----------|---------|
-| WALKING | 0.86 | 0.85 | 0.86 | 496 |
-| WALKING_UPSTAIRS | 0.84 | 0.87 | 0.85 | 471 |
-| WALKING_DOWNSTAIRS | 0.88 | 0.85 | 0.86 | 420 |
-| SITTING | 0.77 | 0.05 | 0.10 | 491 |
-| STANDING | 0.37 | 0.94 | 0.53 | 532 |
-| LAYING | 0.56 | 0.17 | 0.26 | 537 |
+| WALKING | 0.89 | 0.84 | 0.86 | 496 |
+| WALKING_UPSTAIRS | 0.94 | 0.87 | 0.90 | 471 |
+| WALKING_DOWNSTAIRS | 0.80 | 0.92 | 0.86 | 420 |
+| SITTING | 0.85 | 0.76 | 0.80 | 491 |
+| STANDING | 0.81 | 0.87 | 0.84 | 532 |
+| LAYING | 0.99 | 1.00 | 0.99 | 537 |
 
 **Key Observations**:
-- ⚠️ **Severe underperformance**: 61.55% vs expected ~94-96%
-- Excellent on dynamic activities (WALKING variants: 85-86% F1)
-- **Catastrophic failure on static postures**:
-  - SITTING: Only 5% recall (misses 95% of sitting samples!)
-  - LAYING: Only 17% recall
-  - STANDING: 94% recall but 37% precision (heavy confusion)
-- Model struggles to distinguish between static postures
-- No overfitting: train/test gap is minimal (64.53% vs 61.55%)
-- Learning plateaued after epoch 20
+- ✅ **Major improvement**: 87.82% vs previous 61.55% (+26.27%!)
+- **Fixed data preprocessing**: Now uses all 9 UCI-HAR features (body_acc + body_gyro + total_acc)
+- Excellent performance across all activity types
+- Best on LAYING (0.99 F1) and WALKING_UPSTAIRS (0.90 F1)
+- Good static posture classification: SITTING (80%), STANDING (84%)
+- Fast convergence: Best accuracy at epoch 30/50
+- Slight overfitting: train 94.19% vs test 87.82% (6.37% gap)
 
-**Critical Issues**:
-1. **Architecture mismatch**: Model designed for 6 input channels, UCI-HAR uses 9 features
-2. **Data format**: Model expects raw inertial signals (6 channels), loaded partial data
-3. **Severe class imbalance in predictions**: Heavily biased toward STANDING
-4. **Static vs Dynamic**: Model learns dynamic patterns well but fails on static postures
+**Fixed Issues**:
+1. ✅ **Data preprocessing corrected**: Now loads all 9 features instead of 6
+2. ✅ **Static posture classification improved**: No more catastrophic failures
+3. ✅ **Balanced predictions**: All classes well-represented
+4. ✅ **Architecture properly configured**: input_dim=9 matches UCI-HAR
 
 **Files Generated**:
 - `model5-cnn-transformer/best_model_cnn_transformer.pth`
@@ -292,11 +290,11 @@ Output (6 classes)
 
 | Metric | Model 1 (CNN-LSTM) | Model 2 (CNN-LSTM-Attn) | Model 4 (CNN-BiLSTM-Attn) | Model 5 (CNN-Transformer) |
 |--------|-------------------|------------------------|---------------------------|---------------------------|
-| **Test Accuracy** | **91.11%** 🥇 | 90.94% | 91.21% 🏆 | 61.55% ⚠️ |
-| **F1-Score** | **0.9113** 🥇 | 0.9104 | 0.9029 | 0.5789 ⚠️ |
-| **Convergence** | Epoch 15 🏆 | Epoch 40 | Epoch 90 | Epoch 40 |
+| **Test Accuracy** | **91.11%** 🥇 | 90.94% | 91.21% 🏆 | 87.82% |
+| **F1-Score** | **0.9113** 🥇 | 0.9104 | 0.9029 | 0.8764 |
+| **Convergence** | Epoch 15 🏆 | Epoch 40 | Epoch 90 | Epoch 30 |
 | **Training Time** | Fastest 🏆 | Medium | Slowest | Medium |
-| **Parameters** | ~2.1M | ~2.1M | ~50K 🏆 | ~50K |
+| **Parameters** | ~2.1M | ~2.1M | ~50K 🏆 | ~70K |
 | **Architecture** | CNN→LSTM | CNN→LSTM→Attn | BiLSTM→Attn | Conv→Transformer |
 | **Attention** | ❌ | ✅ | ✅ | ✅ Multi-head |
 
@@ -328,30 +326,28 @@ Output (6 classes)
    - Doesn't help CNN-LSTM (Model 2: 90.94% < Model 1: 91.11%)
    - Architecture compatibility matters more than attention mechanism alone
 
-6. ⚠️ **Transformer Failure** (Model 5): Severe underperformance (61.55% vs expected 94-96%)
-   - **Root cause**: Data preprocessing mismatch
-     - Model expects 6 input channels (body_acc + body_gyro only)
-     - Missing total_acc signals and proper feature engineering
-   - **Catastrophic static posture failure**:
-     - SITTING: 5% recall (predicts almost none correctly)
-     - LAYING: 17% recall
-     - Heavy confusion between static activities
-   - **Good at dynamics**: 85-86% F1 on WALKING variants
-   - **Lesson**: Transformers require careful data preprocessing and may need more training data than LSTMs
-   - **Architecture too complex** for this dataset size (7,352 samples)
+6. ✅ **Transformer Success** (Model 5): Good performance after fixing data preprocessing (87.82%)
+   - **Initial failure**: 61.55% with only 6 input channels
+   - **After fix**: 87.82% with all 9 UCI-HAR features (+26.27% improvement!)
+   - **Root cause identified**: Missing total_acc signals (3 channels)
+   - **Lesson learned**: Data preprocessing is CRITICAL for deep learning success
+   - **Transformer characteristics**:
+     - Good performance across all activities (0.8764 F1)
+     - Faster convergence than BiLSTM (30 vs 90 epochs)
+     - Slightly more overfitting than LSTM models (6.37% gap)
+     - Performs 3.39% below best model (Model 4: 91.21%)
+   - **Trade-off**: Modern architecture with good interpretability, but requires more parameters and data preparation
 
 ---
 
 ## Next Steps
 
 ### Immediate Tasks
-1. ✅ **Model 5 Training Complete** - Needs investigation and fixes:
-   - Verify correct data loading (9 features vs 6 channels)
-   - Add total_acc signals to input
-   - Consider feature extraction instead of raw signals
-   - Increase model capacity or training epochs
-   - Try different learning rates and schedulers
-   - Investigate class imbalance handling
+1. ✅ **All Models Complete and Successfully Trained**
+   - Model 1: 91.11% (baseline)
+   - Model 2: 90.94% (attention variant)
+   - Model 4: 91.21% (best accuracy)
+   - Model 5: 87.82% (transformer - fixed and retrained)
 
 ### Analysis Tasks
 1. Generate confusion matrices for all models
@@ -396,7 +392,7 @@ AIML/
 ├── model1-cnn-lstm/             # ✅ CNN-LSTM Baseline (91.11%) 🥇
 ├── model2-cnn-lstm-attention/   # ✅ CNN-LSTM-Attention (90.94%)
 ├── model4-cnn-bilstm-attention/ # ✅ CNN-BiLSTM-Attention (91.21%) 🏆
-├── model5-cnn-transformer/      # ⚠️ CNN-Transformer (61.55%) - Needs fix
+├── model5-cnn-transformer/      # ✅ CNN-Transformer (87.82%) - Fixed!
 ├── bilstm-reference/            # 📚 Reference BiLSTM code (used for Model 4)
 ├── human+activity+recognition+using+smartphones/ # UCI-HAR dataset
 └── RESULTS_COMPARISON.md        # This file
@@ -435,44 +431,41 @@ Epoch 90... Train Acc: 98.66% | Test Acc: 91.21% ⭐ Best
 Epoch 120... Train Acc: 98.96% | Test Acc: 90.77%
 ```
 
-### Model 5 Training Progress
+### Model 5 Training Progress (After Fix)
 ```
-Epoch 5/50... Train Loss: 1.0454 Train Acc: 51.24% | Test Loss: 1.0879 Test Acc: 51.44%
-Epoch 10/50... Train Loss: 0.8290 Train Acc: 60.11% | Test Loss: 0.8560 Test Acc: 59.11%
-Epoch 15/50... Train Loss: 0.7665 Train Acc: 62.27% | Test Loss: 0.8258 Test Acc: 58.67%
-Epoch 20/50... Train Loss: 0.7299 Train Acc: 63.74% | Test Loss: 0.8035 Test Acc: 61.21%
-Epoch 40/50... Train Loss: 0.7168 Train Acc: 63.59% | Test Loss: 0.8088 Test Acc: 61.55% ⭐ Best
-Epoch 50/50... Train Loss: 0.7155 Train Acc: 63.66% | Test Loss: 0.8089 Test Acc: 61.52%
+Epoch 5/50... Train Loss: 0.3723 Train Acc: 87.21% | Test Loss: 0.4750 Test Acc: 82.52%
+Epoch 10/50... Train Loss: 0.2432 Train Acc: 91.61% | Test Loss: 0.3540 Test Acc: 87.17%
+Epoch 15/50... Train Loss: 0.1991 Train Acc: 93.21% | Test Loss: 0.3861 Test Acc: 86.97%
+Epoch 20/50... Train Loss: 0.1905 Train Acc: 93.51% | Test Loss: 0.4059 Test Acc: 86.77%
+Epoch 30/50... Train Loss: 0.1803 Train Acc: 93.62% | Test Loss: 0.3826 Test Acc: 87.82% ⭐ Best
+Epoch 50/50... Train Loss: 0.1766 Train Acc: 93.93% | Test Loss: 0.4000 Test Acc: 87.58%
 ```
-**Issue**: Learning plateaued around 61% - significantly underperformed expectations
+**Success**: Fixed data preprocessing (9 features) - achieved 87.82% accuracy!
 
 ---
 
 ## Conclusion
 
-Four models have been trained on the UCI-HAR dataset with stark performance differences:
+All four models have been successfully trained on the UCI-HAR dataset:
 
-### Successful Models (~91% accuracy):
-- **Model 1** (CNN-LSTM): 91.11% - Best F1-score, fastest training ⭐ **WINNER**
-- **Model 2** (CNN-LSTM-Attention): 90.94% - Attention didn't help
-- **Model 4** (CNN-BiLSTM-Attention): 91.21% - Highest accuracy but slowest
-
-### Failed Model:
-- **Model 5** (CNN-Transformer): 61.55% - ⚠️ Severe underperformance due to data preprocessing issues
+### Performance Rankings:
+1. **Model 4** (CNN-BiLSTM-Attention): 91.21% - Highest accuracy 🏆
+2. **Model 1** (CNN-LSTM): 91.11% - Best F1-score, fastest training ⭐ **WINNER**
+3. **Model 2** (CNN-LSTM-Attention): 90.94% - Attention didn't help
+4. **Model 5** (CNN-Transformer): 87.82% - Good but below LSTM models
 
 **Performance Summary by Architecture Type**:
 - **CNN-LSTM models**: 90.94% - 91.11% (consistent, reliable)
 - **CNN-BiLSTM models**: 91.21% (highest, but overfitting)
-- **CNN-Transformer models**: 61.55% (failed due to data issues)
+- **CNN-Transformer models**: 87.82% (good, requires proper data preprocessing)
 
-**Surprising Findings**:
+**Key Findings**:
 
 1. **Attention Paradox**: Adding attention to CNN-LSTM (Model 2) hurt performance (-0.17%)
-2. **Transformer Failure**: Modern architecture (Model 5) dramatically underperformed:
-   - Expected: 94-96% (SOTA)
-   - Achieved: 61.55% (30% below baseline!)
-   - Root cause: Data format mismatch (6 vs 9 channels) and insufficient preprocessing
-   - Catastrophic failure on static postures (SITTING: 5% recall)
+2. **Data Preprocessing is Critical**: Model 5 initially failed (61.55%) with incomplete data, jumped to 87.82% (+26.27%) after fixing
+   - Missing 3 channels (total_acc) caused catastrophic failure
+   - Proper feature engineering is ESSENTIAL for deep learning success
+3. **LSTM/BiLSTM Superiority**: Traditional RNN models (90.94-91.21%) outperformed Transformer (87.82%) on this small dataset
 
 **Production Recommendation**: **Model 1 (CNN-LSTM Baseline)** is the clear winner:
 - Best balance of accuracy (91.11%) and F1-score (0.9113)
@@ -482,28 +475,28 @@ Four models have been trained on the UCI-HAR dataset with stark performance diff
 - Robust across all activity classes
 
 **Research Recommendation**: 
-- Model 4 for attention visualization studies
-- Model 5 needs significant rework: proper feature engineering, data augmentation, architecture tuning
+- Model 4 for attention visualization studies (highest accuracy)
+- Model 5 for modern transformer-based approaches (good interpretability)
 
 **Key Insights**:
 
-1. **Architecture alone doesn't guarantee performance**: Modern architectures (Transformers) can fail spectacularly without proper data preparation
-2. **Simpler is often better**: CNN-LSTM baseline (91.11%) outperformed all complex alternatives
-3. **Dataset size matters**: Transformers may need more data than 7,352 samples to reach potential
-4. **Domain knowledge critical**: Understanding sensor data structure (9 features) crucial for success
-5. **~91% appears to be the ceiling** for traditional models on UCI-HAR with current preprocessing
-6. **Attention effectiveness varies**: Works with BiLSTM (91.21%), hurts CNN-LSTM (90.94%), insufficient for Transformer success
-7. **RNN superiority for time-series**: LSTM/BiLSTM models (90.94-91.21%) vastly outperformed Transformer (61.55%) on this dataset
+1. **Data preprocessing is CRITICAL**: Model 5 went from 61.55% → 87.82% (+26.27%) just by loading all 9 features correctly
+2. **Simpler is often better for small datasets**: CNN-LSTM baseline (91.11%) outperformed transformer (87.82%)
+3. **Dataset size matters**: 7,352 samples favor LSTM/BiLSTM over Transformers
+4. **Domain knowledge crucial**: Understanding sensor data structure (9 features vs 6) made the difference between failure and success
+5. **~91% appears to be the ceiling** for traditional models on UCI-HAR
+6. **Attention effectiveness varies**: Works with BiLSTM (91.21%), hurts CNN-LSTM (90.94%), moderate with Transformer (87.82%)
+7. **RNN superiority for small time-series**: LSTM/BiLSTM models (90.94-91.21%) outperformed Transformer (87.82%) by 3-4%
 
-**Future Work for Model 5**:
-1. Fix input channels: Include all 9 UCI-HAR features (total_acc + body_acc + body_gyro)
-2. Add proper feature extraction preprocessing
-3. Increase training data through augmentation
-4. Tune hyperparameters (learning rate, model capacity)
-5. Consider ensemble with successful models
+**Lessons Learned**:
+- ✅ Always verify input data dimensions match model expectations
+- ✅ Missing features cause catastrophic performance drops
+- ✅ Modern architectures don't guarantee better results on small datasets
+- ✅ Proper data preparation > architecture complexity
 
 ---
 
 **Last Updated**: November 22, 2025  
-**Status**: ✅ All 4 models trained (Models 1, 2, 4 successful; Model 5 needs debugging)  
-**Best Model**: Model 1 (CNN-LSTM Baseline) - 91.11% accuracy, 0.9113 F1-score
+**Status**: ✅ All 4 models successfully trained and evaluated  
+**Best Model**: Model 1 (CNN-LSTM Baseline) - 91.11% accuracy, 0.9113 F1-score  
+**Biggest Learning**: Data preprocessing matters more than architecture choice!
