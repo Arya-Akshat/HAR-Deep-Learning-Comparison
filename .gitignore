@@ -1,0 +1,169 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+.virtualenv/
+*.venv
+
+# PyTorch Models (large files)
+*.pth
+*.pt
+*.pkl
+*.h5
+*.ckpt
+*.safetensors
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+*.ipynb_checkpoints
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# GitHub Copilot Instructions (optional - keep if you want)
+# .github/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IDEs
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.db
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Results and output files
+results/
+output/
+runs/
+logs/
+checkpoints/
+wandb/
+mlruns/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+temp/
+tmp/
+
+# Dataset files (too large for git)
+*.csv
+*.txt
+*.dat
+# Keep README and requirements
+!README.md
+!requirements.txt
+!environment.yml
+!*.names
+
+# Keep specific dataset files if small
+!human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset.names
+!human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/activity_labels.txt
+!human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/features.txt
+!human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/features_info.txt
+!human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/README.txt
+
+# Exclude large data directories but keep structure
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/train/Inertial\ Signals/*.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/test/Inertial\ Signals/*.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/train/X_train.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/train/y_train.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/train/subject_train.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/test/X_test.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/test/y_test.txt
+human+activity+recognition+using+smartphones/UCI\ HAR\ Dataset/test/subject_test.txt
+
+# Keep result visualizations
+!*_confusion_matrix.png
+!*_training_curves.png
+!model*_*.png
+
+# Keep configuration files
+!*.json
+!config*.json
+
+# Keep documentation
+!*.md
+!PROJECT_STRUCTURE.md
+!RESULTS_COMPARISON.md
+
+# Exclude any additional temp directories
+temp.txt
+scratch/
