@@ -49,8 +49,8 @@ env/
 *.code-workspace
 .history/
 
-# GitHub Copilot Instructions (optional - keep if you want)
-# .github/
+# GitHub Copilot Instructions
+.github/
 
 # macOS
 .DS_Store
