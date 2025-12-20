@@ -1,0 +1,18 @@
+# HAR Deep Learning Comparison - Requirements
+# Python 3.11 recommended
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Data Processing
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Machine Learning Utilities
+scikit-learn>=1.3.0

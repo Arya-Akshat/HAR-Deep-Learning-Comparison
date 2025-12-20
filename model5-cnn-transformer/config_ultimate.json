@@ -1,0 +1,28 @@
+{
+    "name": "UCI-HAR Ultimate Transformer",
+    "description": "Maximum performance config - larger model, longer training",
+    
+    "input_dim": 9,
+    "num_classes": 6,
+    "window_size": 128,
+    
+    "transformer_dim": 256,
+    "nhead": 8,
+    "num_encoder_layers": 4,
+    "dim_feedforward": 512,
+    "transformer_dropout": 0.3,
+    "transformer_activation": "gelu",
+    "encode_position": true,
+    
+    "cls_head": "cls_token",
+    
+    "batch_size": 64,
+    "n_epochs": 300,
+    "lr": 0.0003,
+    "warmup_epochs": 20,
+    "weight_decay": 0.01,
+    "label_smoothing": 0.1,
+    "gradient_clip": 1.0,
+    
+    "device_id": "cuda"
+}
