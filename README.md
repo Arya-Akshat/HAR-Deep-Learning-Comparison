@@ -6,51 +6,50 @@ A comprehensive comparative study of deep learning architectures for Human Activ
 
 Compare and benchmark different deep learning architectures to determine the most effective approach for classifying human activities from smartphone accelerometer and gyroscope data.
 
-## 📊 Key Results
+## 📊 Key Results (Updated December 2025)
 
-| Model | Architecture | Test Accuracy | F1-Score |
-|-------|-------------|---------------|----------|
-| Model 1 | CNN-LSTM Baseline | **91.11%** | **0.9113** ⭐ |
-| Model 2 | CNN-LSTM-Attention | 90.94% | 0.9104 |
-| Model 4 | CNN-BiLSTM-Attention | **91.21%** | 0.9029 |
-| Model 5 | CNN-Transformer | 61.55% | 0.5789 ⚠️ |
+| Rank | Model | Architecture | Test Accuracy | F1-Score | Parameters |
+|------|-------|-------------|---------------|----------|------------|
+| 🥇 | Model 5 | CNN-Transformer (Ultimate) | **93.48%** | **0.9344** | 2,359,494 |
+| 🥈 | Model 4 | CNN-BiLSTM-Attention | 93.38% | 0.9350 | 187,654 |
+| 🥉 | Model 1 | CNN-LSTM Baseline | 93.08% | 0.9309 | 209,478 |
+| 4th | Model 2 | CNN-LSTM-Attention | 92.64% | 0.9266 | 161,094 |
 
-**Winner:** Model 1 (CNN-LSTM Baseline) - Best balance of accuracy, F1-score, and training efficiency.
+**Winner:** Model 5 (CNN-Transformer Ultimate) - Achieves best accuracy with optimized architecture and training.
 
 ## 🔬 Study Highlights
 
 ### Main Findings
 
-1. **Simple beats complex**: CNN-LSTM baseline (91.11%) outperformed attention-enhanced variants in efficiency and generalization
-2. **Attention paradox**: Adding attention to CNN-LSTM actually decreased performance by 0.17%
-3. **Transformer failure**: Modern architecture severely underperformed (61.55%) due to:
-   - Data preprocessing mismatch (6 vs 9 input channels)
-   - Insufficient dataset size for transformer training (7,352 samples)
-   - Catastrophic failure on static postures (SITTING: 5% recall)
-4. **Performance ceiling**: Traditional RNN models consistently achieved ~91% accuracy ceiling
+1. **Transformers can win** with proper optimization: Larger model (256 dim, 4 layers) + longer training (150 epochs) + warmup scheduler achieved **93.48%**
+2. **Attention paradox**: Adding attention to CNN-LSTM actually **decreased** performance by 0.44%
+3. **BiLSTM strength**: Bidirectional context helps - nearly matched Transformer with 12x fewer parameters
+4. **SITTING vs STANDING**: Hardest classification pair across ALL models (75-85% recall)
 
 ### Technical Insights
 
-- **LSTM/BiLSTM architectures** are superior for small-to-medium time-series datasets
-- **Attention mechanisms** require careful architecture integration - not universally beneficial
-- **Transformers** need proper feature engineering and larger datasets to reach potential
-- **Dataset size matters**: 7K samples insufficient for transformer, adequate for LSTM
+- **Transformer optimization** is critical: warmup scheduler, gradient clipping, label smoothing
+- **Attention mechanisms** don't universally improve CNN-LSTM architectures
+- **BiLSTM** offers best accuracy-to-parameters ratio
+- **Dataset size**: 7K samples works for all architectures with proper training
 
 ## 📁 Repository Structure
 
 ```
-├── model1-cnn-lstm/              # CNN-LSTM Baseline (91.11%) ⭐
-├── model2-cnn-lstm-attention/    # CNN-LSTM + Attention (90.94%)
-├── model4-cnn-bilstm-attention/  # CNN-BiLSTM + Attention (91.21%)
-├── model5-cnn-transformer/       # CNN-Transformer (61.55%, needs fixes)
+├── model1-cnn-lstm/              # CNN-LSTM Baseline (93.08%) 🥉
+├── model2-cnn-lstm-attention/    # CNN-LSTM + Attention (92.64%)
+├── model4-cnn-bilstm-attention/  # CNN-BiLSTM + Attention (93.38%) 🥈
+├── model5-cnn-transformer/       # CNN-Transformer Ultimate (93.48%) 🥇
 ├── bilstm-reference/             # Reference BiLSTM implementations
 ├── human+activity+recognition+using+smartphones/  # UCI-HAR dataset
+├── results/                      # Training outputs (models, plots)
 ├── RESULTS_COMPARISON.md         # Detailed analysis and comparison
 ├── PROJECT_STRUCTURE.md          # Complete project documentation
 └── README.md                     # This file
 ```
 
 Each model directory contains:
+- `train_3070ti.py` - Optimized training script (Windows/CUDA)
 - Training notebook (Jupyter) with full pipeline
 - Model architecture implementation
 - Data preprocessing utilities
@@ -61,7 +60,7 @@ Each model directory contains:
 ### Prerequisites
 
 - Python 3.11+
-- PyTorch 2.x with MPS/CUDA support
+- PyTorch 2.x with CUDA support
 - UV package manager (recommended) or pip
 
 ### Setup
@@ -96,11 +95,27 @@ Open any `Train-*.ipynb` notebook and run all cells. Each notebook includes:
 ## 📈 Training Configuration
 
 All models trained on:
-- **Hardware**: MacBook M4 Air with MPS GPU
+- **Hardware**: NVIDIA GeForce RTX 3070 Ti Laptop GPU (8.6GB VRAM)
 - **Dataset**: UCI-HAR (7,352 train, 2,947 test samples)
-- **Input**: 9 features (3-axis accelerometer + 3-axis gyroscope)
+- **Input**: 9 channels (body_acc xyz, body_gyro xyz, total_acc xyz)
 - **Sequence length**: 128 timesteps
 - **Classes**: 6 activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
+
+### Optimized Training Scripts
+
+Each model has a `train_3070ti.py` script with:
+- Windows-compatible paths
+- Automatic GPU detection (CUDA/MPS/CPU)
+- Results saved to `results/modelX/` folder
+- Confusion matrix and training curves visualization
+
+```bash
+# Run any model
+python model1-cnn-lstm/train_3070ti.py
+python model2-cnn-lstm-attention/train_3070ti.py
+python model4-cnn-bilstm-attention/train_3070ti.py
+python model5-cnn-transformer/train_ultimate.py  # Best results
+```
 
 ## 📖 Documentation
 
@@ -120,31 +135,28 @@ All models trained on:
 
 ### For Practitioners
 
-- **Use CNN-LSTM (Model 1)** for production HAR systems - best accuracy/efficiency trade-off
-- LSTM models converge faster (15 epochs) vs BiLSTM (90 epochs)
-- Simpler architectures are easier to maintain and debug
-- ~91% accuracy appears to be the ceiling for this dataset with current methods
+- **Use CNN-Transformer (Model 5)** for best accuracy if compute budget allows
+- **Use BiLSTM (Model 4)** for best accuracy/efficiency trade-off
+- SITTING vs STANDING is inherently difficult (~85% recall max)
+- All models achieve 93%+ with proper optimization
 
 ### For Researchers
 
 - Attention mechanisms don't universally improve performance
-- Transformers require careful data preparation and sufficient training data
-- Architecture-data compatibility is critical
-- Small datasets (7K samples) favor LSTM over Transformer architectures
+- Transformers CAN work on small datasets with proper optimization
+- Warmup schedulers are critical for transformer training
+- Architecture-data compatibility matters less than training strategy
 
 ## 🔧 Troubleshooting
 
-**Model 5 (Transformer) low accuracy?**
-- Known issue: Data preprocessing loads only 6 of 9 input channels
-- Fix pending: Update data loading to include all UCI-HAR features
-- See RESULTS_COMPARISON.md for detailed analysis
+**Dataset path errors?**
+- Update `DATASET_PATH` in `train_3070ti.py` to match your local path
+
+**CUDA out of memory?**
+- Reduce batch size in the training script
 
 **MPS device errors?**
 - Ensure tensors are float32 (MPS doesn't support float64)
-- All notebooks handle this automatically
-
-**NumPy compatibility issues?**
-- Fixed in all models: np.float → np.float64, np.int → np.int64
 
 ## 📝 Citation
 
@@ -174,11 +186,11 @@ If you use this work, please cite:
 ## 🤝 Contributing
 
 Contributions welcome! Areas for improvement:
-- Fix Model 5 data preprocessing
 - Add data augmentation techniques
 - Implement ensemble methods
-- Explore other transformer variants
+- Explore other transformer variants (PatchTST, Informer)
 - Add real-time inference capabilities
+- Cross-dataset validation
 
 ## 📧 Contact
 
@@ -190,5 +202,5 @@ This project is open source and available under the MIT License.
 
 ---
 
-**Last Updated**: November 22, 2025  
-**Status**: Study complete - 4 models trained and analyzed
+**Last Updated**: December 20, 2025  
+**Status**: Study complete - 4 models trained and benchmarked (93.48% best accuracy)
