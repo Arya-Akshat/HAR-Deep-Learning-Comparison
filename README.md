@@ -10,7 +10,7 @@ Compare and benchmark different deep learning architectures to determine the mos
 
 | Rank | Model | Architecture | Test Accuracy | F1-Score | Parameters |
 |------|-------|-------------|---------------|----------|------------|
-| 🥇 | Model 5 | CNN-Transformer (Ultimate) | **93.48%** | **0.9344** | 2,359,494 |
+| 🥇 | Model 5 | CNN-Transformer (Ultimate) | **93.48%** | **0.9341** | 2,359,494 |
 | 🥈 | Model 4 | CNN-BiLSTM-Attention | 93.38% | 0.9350 | 187,654 |
 | 🥉 | Model 1 | CNN-LSTM Baseline | 93.08% | 0.9309 | 209,478 |
 | 4th | Model 2 | CNN-LSTM-Attention | 92.64% | 0.9266 | 161,094 |
@@ -42,7 +42,7 @@ Compare and benchmark different deep learning architectures to determine the mos
 ├── model5-cnn-transformer/       # CNN-Transformer Ultimate (93.48%) 🥇
 ├── bilstm-reference/             # Reference BiLSTM implementations
 ├── human+activity+recognition+using+smartphones/  # UCI-HAR dataset
-├── results/                      # Training outputs (models, plots)
+├── results/                      # Training outputs (checkpoints, log)
 ├── RESULTS_COMPARISON.md         # Detailed analysis and comparison
 ├── PROJECT_STRUCTURE.md          # Complete project documentation
 └── README.md                     # This file
@@ -107,7 +107,7 @@ Each model has a `train_3070ti.py` script with:
 - Windows-compatible paths
 - Automatic GPU detection (CUDA/MPS/CPU)
 - Results saved to `results/modelX/` folder
-- Confusion matrix and training curves visualization
+- Summary metrics tracked in `results/TRAINING_LOG.md`
 
 ```bash
 # Run any model
@@ -122,7 +122,7 @@ python model5-cnn-transformer/train_ultimate.py  # Best results
 - **[RESULTS_COMPARISON.md](RESULTS_COMPARISON.md)**: Comprehensive comparison with:
   - Detailed performance metrics
   - Per-class analysis
-  - Training curves and logs
+  - Training log summary (authoritative results in `results/TRAINING_LOG.md`)
   - Architecture descriptions
   - Comparative analysis and insights
   - Future work recommendations
@@ -204,3 +204,5 @@ This project is open source and available under the MIT License.
 
 **Last Updated**: December 20, 2025  
 **Status**: Study complete - 4 models trained and benchmarked (93.48% best accuracy)
+
+> **Source of truth**: Only the outputs under `results/` are authoritative. Use `results/TRAINING_LOG.md` for the latest metrics and the `best_model.pth` checkpoints for each model.

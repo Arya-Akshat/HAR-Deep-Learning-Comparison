@@ -2,74 +2,65 @@
 
 ## 📁 Project Structure
 
-This repository contains implementations of 5 different deep learning architectures for Human Activity Recognition (HAR) on the UCI-HAR dataset, organized by model type.
+This repository contains implementations of 4 different deep learning architectures for Human Activity Recognition (HAR) on the UCI-HAR dataset, organized by model type.
 
 ```
-AIML/
-├── model1-cnn-lstm/                    # Baseline CNN-LSTM
-├── model2-cnn-lstm-attention/          # CNN-LSTM with Attention
-├── model3-lstm-variants/               # Reference LSTM implementations
-├── model4-cnn-bilstm-attention/        # ✨ Our Implementation
-├── model5-cnn-transformer/             # Transformer (SOTA)
+HAR-Deep-Learning-Comparison/
+├── model1-cnn-lstm/                    # Baseline CNN-LSTM (93.08%) 🥉
+├── model2-cnn-lstm-attention/          # CNN-LSTM with Attention (92.64%)
+├── model4-cnn-bilstm-attention/        # BiLSTM-Attention (93.38%) 🥈
+├── model5-cnn-transformer/             # Transformer (93.48%) 🥇
+├── bilstm-reference/                   # Reference BiLSTM implementations
 │
-├── HAR-CNN-LSTM-ATT-pyTorch/          # Original Repo 1
-├── HAR-using-PyTorch/                 # Original Repo 2
-├── har-with-imu-transformer/          # Original Repo 3
+├── results/                            # Training outputs & checkpoints
+│   ├── TRAINING_LOG.md                 # Authoritative metrics
+│   ├── model1-cnn-lstm/                # Model 1 outputs
+│   ├── model2-cnn-lstm-attention/      # Model 2 outputs
+│   ├── model4-cnn-bilstm-attention/    # Model 4 outputs
+│   └── model5-cnn-transformer/         # Model 5 outputs
 │
 ├── human+activity+recognition+using+smartphones/  # UCI-HAR Dataset
-├── CNN-BiLSTM-Attention-Implementation.ipynb      # Implementation Guide
-└── .github/copilot-instructions.md    # AI Agent Instructions
+├── README.md                           # Main documentation
+├── RESULTS_COMPARISON.md               # Detailed analysis
+└── PROJECT_STRUCTURE.md                # This file
 ```
 
 ## 🎯 Models Overview
 
-| Folder | Model | Status | Accuracy | Source |
-|--------|-------|--------|----------|--------|
-| `model1-cnn-lstm/` | CNN-LSTM (Baseline) | ✅ Complete | ~90-92% | Repo 1 |
-| `model2-cnn-lstm-attention/` | CNN-LSTM-Attention | ✅ Complete | ~92-94% | Repo 1 |
-| `model3-lstm-variants/` | LSTM/BiLSTM Variants | ✅ Reference | Various | Repo 2 |
-| `model4-cnn-bilstm-attention/` | **BiLSTM-Attention** | ✅ **Implemented** | **~93-95%** | **Our Work** |
-| `model5-cnn-transformer/` | Transformer (SOTA) | 🔨 Pending | ~95-97% | Repo 3 |
+| Rank | Folder | Model | Accuracy | F1-Score | Parameters |
+|------|--------|-------|----------|----------|------------|
+| 🥇 | `model5-cnn-transformer/` | CNN-Transformer | **93.48%** | 0.9341 | 2,359K |
+| 🥈 | `model4-cnn-bilstm-attention/` | BiLSTM-Attention | 93.38% | **0.9350** | 188K |
+| 🥉 | `model1-cnn-lstm/` | CNN-LSTM (Baseline) | 93.08% | 0.9309 | 209K |
+| 4th | `model2-cnn-lstm-attention/` | CNN-LSTM-Attention | 92.64% | 0.9266 | 161K |
 
 ## 📊 Model Details
 
-### Model 1: CNN-LSTM (Baseline)
+### Model 1: CNN-LSTM (Baseline) 🥉
 - **Path**: `model1-cnn-lstm/`
-- **Source**: `LizLicense/HAR-CNN-LSTM-ATT-pyTorch`
+- **Accuracy**: 93.08%
 - **Architecture**: Conv1D + LSTM + FC
-- **Purpose**: Baseline for comparison
-- **Status**: ✅ Ready to use
+- **Status**: ✅ Complete
 
-### Model 2: CNN-LSTM-Attention (Proposed)
+### Model 2: CNN-LSTM-Attention
 - **Path**: `model2-cnn-lstm-attention/`
-- **Source**: `LizLicense/HAR-CNN-LSTM-ATT-pyTorch`
-- **Architecture**: Conv1D + LSTM + **Attention** + FC
-- **Innovation**: Temporal attention mechanism
-- **Status**: ✅ Ready to use
+- **Accuracy**: 92.64%
+- **Architecture**: Conv1D + LSTM + Temporal Attention + FC
+- **Finding**: ⚠️ Attention decreased performance vs baseline
+- **Status**: ✅ Complete
 
-### Model 3: LSTM Variants (Reference)
-- **Path**: `model3-lstm-variants/`
-- **Source**: `sidharthgurbani/HAR-using-PyTorch`
-- **Variants**: LSTM, BiLSTM, Residual LSTM/BiLSTM
-- **Purpose**: Provides base BiLSTM for Model 4
-- **Status**: ✅ Reference implementations
-
-### Model 4: CNN-BiLSTM-Attention (Our Implementation) ⭐
+### Model 4: BiLSTM-Attention 🥈
 - **Path**: `model4-cnn-bilstm-attention/`
-- **Source**: Combined from Repo 1 + Repo 2
-- **Components**:
-  - BiLSTM base from Model 3
-  - Attention mechanism from Model 2
-- **Implementation Date**: November 22, 2025
-- **Status**: ✅ **Ready for training**
-- **Documentation**: See `model4-cnn-bilstm-attention/README.md`
+- **Accuracy**: 93.38%
+- **Architecture**: BiLSTM (2 layers) + Temporal Attention + FC
+- **Key Insight**: Best efficiency - 93.38% with only 188K parameters
+- **Status**: ✅ Complete
 
-### Model 5: CNN-Transformer (SOTA)
+### Model 5: CNN-Transformer 🥇
 - **Path**: `model5-cnn-transformer/`
-- **Source**: `yolish/har-with-imu-transformer`
-- **Architecture**: Conv1D + Transformer Encoder + MLP
-- **Status**: 🔨 Pending (needs configuration for UCI-HAR)
-- **Next Steps**: Update config.json, convert data to CSV
+- **Accuracy**: 93.48% (Best!)
+- **Architecture**: Conv1D + Transformer Encoder (4 layers, 8 heads) + MLP
+- **Status**: ✅ Complete
 
 ## 🚀 Quick Start
 
@@ -105,12 +96,12 @@ python main_pytorch.py --nepoch 50 --batchsize 64
 
 ### Performance Comparison (UCI-HAR Dataset)
 
-| Model | Test Accuracy | F1-Score | Training Time | Parameters |
-|-------|--------------|----------|---------------|------------|
-| Model 1 (CNN-LSTM) | 90-92% | 0.91 | ~45s/epoch | 2.1M |
-| Model 2 (CNN-LSTM-Att) | 92-94% | 0.93 | ~52s/epoch | 2.3M |
-| **Model 4 (BiLSTM-Att)** | **93-95%** | **0.94** | **~58s/epoch** | **2.4M** |
-| Model 5 (Transformer) | 95-97% | 0.96 | ~95s/epoch | 3.8M |
+| Model | Test Accuracy | F1-Score | Parameters |
+|-------|--------------|----------|------------|
+| Model 1 (CNN-LSTM) | 93.08% | 0.931 | 209K |
+| Model 2 (CNN-LSTM-Att) | 92.64% | 0.927 | 161K |
+| **Model 4 (BiLSTM-Att)** | **93.38%** | **0.935** | **188K** |
+| Model 5 (Transformer) | **93.48%** 🏆 | 0.934 | 2,359K |
 
 ## 📚 Dataset
 
@@ -136,36 +127,23 @@ python main_pytorch.py --nepoch 50 --batchsize 64
 ### Model-Specific README Files
 - `model1-cnn-lstm/README.md` - Baseline model documentation
 - `model2-cnn-lstm-attention/README.md` - Attention model documentation
-- `model3-lstm-variants/README.md` - LSTM variants reference
-- `model4-cnn-bilstm-attention/README.md` - **Our implementation details**
-- `model5-cnn-transformer/README.md` - Transformer setup guide
+- `model4-cnn-bilstm-attention/README.md` - BiLSTM-Attention details
+- `model5-cnn-transformer/README.md` - Transformer documentation
+- `bilstm-reference/README.md` - Reference implementations
 
-### Implementation Guide
-- **Jupyter Notebook**: `CNN-BiLSTM-Attention-Implementation.ipynb`
-  - Environment setup
-  - Step-by-step implementation
-  - Code comparisons
-  - Training instructions
+### Results & Authoritative Metrics
+- **`results/TRAINING_LOG.md`** - Source of truth for all metrics
+- Each model folder in `results/` contains:
+  - `best_model.pth` - Trained model checkpoint
+  - `confusion_matrix.png` - Per-class performance visualization
+  - `training_curves.png` - Loss and accuracy over epochs
 
-### AI Agent Instructions
-- **File**: `.github/copilot-instructions.md`
-- Contains development patterns and project conventions
+## 🔗 Source Repositories
 
-## 🔄 Original Repositories (Reference)
-
-The original repository folders are preserved for reference:
-
-1. **`HAR-CNN-LSTM-ATT-pyTorch/`**
-   - Contains Models 1 & 2 (complete project structure)
-   - SSL training, data processing, results
-
-2. **`HAR-using-PyTorch/`**
-   - Contains LSTM variants reference
-   - BiLSTM base used in Model 4
-
-3. **`har-with-imu-transformer/`**
-   - Transformer implementation for Model 5
-   - Needs configuration for UCI-HAR
+The models in this project were adapted from:
+1. [HAR-CNN-LSTM-ATT-pyTorch](https://github.com/LizLicense/HAR-CNN-LSTM-ATT-pyTorch) - Models 1 & 2
+2. [HAR-using-PyTorch](https://github.com/sidharthgurbani/HAR-using-PyTorch) - BiLSTM reference
+3. [har-with-imu-transformer](https://github.com/yolish/har-with-imu-transformer) - Model 5
 
 ## 🎓 Research Paper Usage
 
@@ -180,7 +158,7 @@ This project structure supports a comprehensive comparison paper:
 ### Metrics to Report
 - Overall accuracy
 - Per-class F1-scores
-- Confusion matrices
+- Confusion matrices (available in `results/` as PNG files)
 - Training time
 - Model complexity (parameters)
 - Inference time
@@ -188,26 +166,16 @@ This project structure supports a comprehensive comparison paper:
 ## 🛠️ Development Workflow
 
 ### Completed
-- ✅ Model 1 & 2 available from Repo 1
-- ✅ Model 3 reference from Repo 2
-- ✅ Model 4 implementation (BiLSTM + Attention)
+- ✅ Model 1 & 2 trained (93.08%, 92.64%)
+- ✅ Model 4 implementation & training (93.38%)
+- ✅ Model 5 configured & trained (93.48% 🏆)
 - ✅ Dataset configuration
 - ✅ Virtual environment setup
 - ✅ Documentation
+- ✅ Comparative analysis
+- ✅ Research paper written
 
-### Pending
-- ⬜ Train Model 4 and collect results
-- ⬜ Configure Model 5 for UCI-HAR
-- ⬜ Train Model 5
-- ⬜ Comparative analysis
-- ⬜ Paper writing
-
-## 🔗 References
-
-### Source Repositories
-1. [HAR-CNN-LSTM-ATT-pyTorch](https://github.com/LizLicense/HAR-CNN-LSTM-ATT-pyTorch)
-2. [HAR-using-PyTorch](https://github.com/sidharthgurbani/HAR-using-PyTorch)
-3. [har-with-imu-transformer](https://github.com/yolish/har-with-imu-transformer)
+### All Tasks Complete ✅
 
 ### Dataset
 - [UCI-HAR Dataset](https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones)
@@ -215,9 +183,10 @@ This project structure supports a comprehensive comparison paper:
 ## 👥 Project Information
 
 **Created**: November 22, 2025  
+**Updated**: January 21, 2026  
 **Purpose**: Comparative study for HAR research paper  
-**Main Contribution**: Model 4 - CNN-BiLSTM-Attention implementation
+**Main Contribution**: Benchmarking 4 neural architectures for HAR
 
 ---
 
-**Current Status**: ✅ Model 4 ready for training | 🔨 Model 5 pending configuration
+**Current Status**: ✅ All models trained | 🏆 Best: Transformer (93.48%) | ⭐ Best Efficiency: BiLSTM-Attention (93.38%)

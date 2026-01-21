@@ -2,9 +2,8 @@
 
 ## Results
 - **Test Accuracy: 93.48%** (Best!)
-- **F1-Score: 0.9344**
+- **F1-Score: 0.9341**
 - **Parameters: 2,359,494**
-- **Best Epoch: 140** (early stopped at 190)
 
 ## Quick Start
 ```bash
@@ -14,7 +13,7 @@ python train_ultimate.py
 # Standard optimized version
 python train_3070ti.py
 ```
-Results saved to `../results/model5-cnn-transformer/`
+Outputs saved to `../results/model5-cnn-transformer/` (checkpoint: `best_model.pth`). Latest metrics live in `../results/TRAINING_LOG.md`.
 
 ## Architecture
 ```

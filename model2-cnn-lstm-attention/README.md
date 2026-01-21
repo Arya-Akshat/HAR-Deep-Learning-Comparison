@@ -11,7 +11,7 @@
 ```bash
 python train_3070ti.py
 ```
-Results saved to `../results/model2-cnn-lstm-attention/`
+Outputs saved to `../results/model2-cnn-lstm-attention/` (checkpoint: `best_model.pth`). Latest metrics live in `../results/TRAINING_LOG.md`.
 
 ## Architecture
 ```
