@@ -31,13 +31,13 @@ env/
 .virtualenv/
 *.venv
 
-# PyTorch Models (large files)
-*.pth
+# PyTorch Models (large files) - but allow results/
 *.pt
 *.pkl
 *.h5
 *.ckpt
 *.safetensors
+# *.pth is allowed in results/ - see below
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -108,7 +108,7 @@ coverage.xml
 .env.*.local
 
 # Results and output files
-results/
+# results/ is tracked for reproducibility - model checkpoints and training logs
 output/
 runs/
 logs/
